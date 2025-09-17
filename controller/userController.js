@@ -32,97 +32,6 @@ const createUser = async (req, res, next) => {
   }
 };
 
-const findAllUser = async (req, res) => {
-  try {
-    const users = await User.find({});
-    if (users.length === 0) {
-      return res.status(404).send({
-        message: "user not found",
-      });
-    }
-    res.status(200).send({
-      data: users,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
-};
-
-const findUser = async (req, res) => {
-  try {
-    const userId = req.params.userId;
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    }
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).send({
-        data: "user not found",
-      });
-    }
-    res.status(200).send({
-      message: "user fetched successfully",
-      data: user,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
-};
-
-const updateSkills = async (req, res, next) => {
-  try {
-    const userId = req.params?.userId;
-    const { skills } = req.body;
-    const uniqueSkills = [...new Set(skills)];
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $addToSet: { skills: { $each: uniqueSkills } },
-      },
-      { new: true, runValidators: true }
-    );
-    await user.validate();
-    res.status(200).send({
-      message: "skills update successfully",
-      user: user,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const deleteSkills = async (req, res, next) => {
-  try {
-    const userId = req.params?.userId;
-    const { skills } = req.body;
-    const uniqueSkills = [...new Set(skills)];
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $pull: { skills: { $in: uniqueSkills } },
-      },
-      { new: true }
-    );
-
-    res.status(200).send({
-      message: "skills update successfully",
-      user: user,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -145,8 +54,6 @@ const loginUser = async (req, res) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      // sameSite: "none",
     });
     res.status(200).json({
       message: "user fetched successfully",
@@ -160,11 +67,26 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logOut = async (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expiresIn: Date.now(),
+  }),
+    res.status(200).json({
+      message: "user logged out successfully",
+    });
+};
+
+const getUser = async (req, res) => {
+  res.status(200).json({
+    message: "user fetched successfully",
+    user: req.user,
+  });
+};
+
 module.exports = {
   createUser,
-  findAllUser,
-  findUser,
-  updateSkills,
-  deleteSkills,
   loginUser,
+  logOut,
+  getUser,
 };

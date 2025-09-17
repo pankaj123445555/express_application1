@@ -1,17 +1,22 @@
-const express = require("express");
-const app = express();
-const errorHandler = require("./middleware/errorHandler");
 require("dotenv").config();
-require("./config/db");
-const userRouter = require("./routes/userRoute");
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
-const Port = process.env.PORT;
+const express = require("express");
+const cookieParser = require("cookie-parser");
+
+const errorHandler = require("./middleware/errorHandler");
+const userRouter = require("./routes/userRoute");
+require("./config/db");
+
+const app = express();
+
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+
+app.use(cookieParser());
+
 app.use("/user", userRouter);
 
-app.listen(Port, () => console.log("Server running on 3000"));
+app.use(errorHandler);
 
-app.use("/user", errorHandler);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

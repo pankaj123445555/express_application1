@@ -6,19 +6,15 @@ const authMiddleWare = require("../middleware/authMiddleware");
 
 const {
   createUser,
-  findAllUser,
-  findUser,
-  updateSkills,
-  deleteSkills,
   loginUser,
+  logOut,
+  getUser,
 } = require("../controller/userController");
 
 // RESTful API endpoints
 router.post("/sign-up", createUser);
-router.get("/", findAllUser);
-router.get("/:userId", authMiddleWare, findUser);
 router.post("/login", loginUser);
-router.post("/add-skills/:userId", updateSkills);
-router.delete("/delete-skills/:userId", deleteSkills);
+router.post("/logout", logOut);
+router.get("/get-user", authMiddleWare, getUser);
 
 module.exports = router;
