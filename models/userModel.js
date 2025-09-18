@@ -33,58 +33,29 @@ const userSchema = new mongoose.Schema({
       message: "more than 4 item not allowed",
     },
   },
-  // phone: {
-  //   type: String,
-  //   validate: {
-  //     validator: function (v) {
-  //       return /\d{3}-\d{3}-\d{4}/.test(v);
-  //     },
-  //     message: (props) => `${props.value} is not a valid phone number!`,
-  //   },
-  //   required: [true, "User phone number required"],
-  // },
-  // role: {
-  //   type: String,
-  //   enum: {
-  //     values: ["admin", "user", "guest"],
-  //     message: "{VALUE} is not supported",
-  //   },
-  // },
-  // summary: {
-  //   type: String,
-  //   minLength: 50,
-  //   maxLength: 100,
-  // },
-  // age: {
-  //   type: Number,
-  //   required: true,
-  //   min: 18,
-  // },
-  // gender: {
-  //   type: String,
-  //   required: true,
-  //   enum: ["Male", "Female"],
-  // },
-  // profilePic: {
-  //   type: String,
-  //   required: true,
-  // },
-  // password: {
-  //   type: String,
-  //   required: true,
-  //   select: false,
-  // },
-  // address: {
-  //   city: {
-  //     type: String,
-  //   },
-  //   state: {
-  //     type: String,
-  //   },
-  //   houseNo: {
-  //     type: String,
-  //   },
-  // },
+  phone: {
+    type: String,
+    validate: {
+      validator: function (v) {
+        return /^\d{10}$/.test(v);
+      },
+      message: (props) =>
+        `${props.value} is not a valid 10-digit phone number!`,
+    },
+  },
+  age: {
+    type: Number,
+
+    min: 18,
+  },
+  gender: {
+    type: String,
+
+    enum: ["Male", "Female"],
+  },
+  profilePic: {
+    type: String,
+  },
 });
 
 const userModel = mongoose.model("userModel", userSchema);
