@@ -1,3 +1,4 @@
+const { stat } = require("fs");
 const connectionModel = require("../models/coonectionRequest");
 
 const sendConnectionRequest = async (req, res) => {
@@ -47,4 +48,42 @@ const sendConnectionRequest = async (req, res) => {
   }
 };
 
-module.exports = { sendConnectionRequest };
+const reviewRequest = async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+    const { status, reqId } = req.params;
+
+    const allowedStatus = ["accepted", "rejected"];
+
+    if (!allowedStatus.includes(status)) {
+      return res.status(400).json({
+        message: `status is not allowed : ${status}`,
+      });
+    }
+    console.log(reqId, loggedInUser._id);
+    const isRequestExist = await connectionModel.findOne({
+      _id: reqId,
+      toUserId: loggedInUser._id,
+      status: "interested",
+    });
+
+    if (!isRequestExist) {
+      return res.status(400).json({
+        message: "invalid request",
+      });
+    }
+    isRequestExist.status = status;
+    const data = await isRequestExist.save();
+    return res.status(200).json({
+      message: `request - ${status}`,
+      data: data,
+    });
+  } catch (err) {
+    return res.status(400).json({
+      message: "some thing went wrong",
+      err: err.message,
+    });
+  }
+};
+
+module.exports = { sendConnectionRequest, reviewRequest };
