@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const errorHandler = require("./middleware/errorHandler");
 const userRouter = require("./routes/userRoute");
 const profileRouter = require("./routes/profile");
+const connectionRouter = require("./routes/connectionRequest");
 require("./config/db");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/", profileRouter);
+app.use("/connection", connectionRouter);
 
 app.use(errorHandler);
 

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connectionRequestSchema = new mongoose.Schema(
   {
-    fromuserId: {
+    fromUserId: {
       type: mongoose.Schema.Types.ObjectId,
       require: [true, "from user id is required"],
     },
@@ -23,6 +23,13 @@ const connectionRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+connectionRequestSchema.pre("save", function (next) {
+  if (this.fromUserId.equals(this.toUserId)) {
+    throw new Error("from user id is equal to user id");
+  }
+  next();
+});
 
 const ConnectionModel = mongoose.model(
   "ConnectionModel",

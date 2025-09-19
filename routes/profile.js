@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const { viewProfile, updateProfile } = require("../controller/profile");
-const authMiddleWare = require("../middleware/authMiddleware");
+const { authMiddleWare } = require("../middleware/authMiddleware");
 const { route } = require("./userRoute");
 
 router.get("/profile/:userId", authMiddleWare, viewProfile);
