@@ -34,6 +34,7 @@ const createUser = async (req, res, next) => {
 
 const loginUser = async (req, res) => {
   try {
+    console.log("ip", req.ip);
     const { email, password } = req.body;
     if (!email || !password) {
       throw new Error("enter an valid email and password");

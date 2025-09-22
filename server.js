@@ -7,6 +7,8 @@ const errorHandler = require("./middleware/errorHandler");
 const userRouter = require("./routes/userRoute");
 const profileRouter = require("./routes/profile");
 const connectionRouter = require("./routes/connectionRequest");
+const rateLimiter = require("./middleware/rateLimiter");
+
 require("./config/db");
 
 const app = express();
@@ -16,6 +18,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(rateLimiter);
 
 app.use("/user", userRouter);
 app.use("/", profileRouter);
