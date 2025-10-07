@@ -23,6 +23,11 @@ app.get("/user", (req, res) => {
   return res.send("hi pankaj");
 });
 
+app.get("/users", (req, res) => {
+  console.log("hellu pankaj");
+  return res.send("hello from users");
+});
+
 app.use(rateLimiter);
 
 app.use("/user", userRouter);
